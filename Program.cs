@@ -7,7 +7,7 @@ class Program
 {
     static void Main(string[] args)
     {
-        Console.WriteLine("Hello!");
+        Console.WriteLine("Splitting a large log file:");
 
         if (args.Length < 1)
         {
@@ -20,12 +20,12 @@ class Program
 
         if (args.Length >= 2 && !int.TryParse(args[1], out linesPerFile))
         {
-            Console.WriteLine("Invalid number of lines per file. Using default of 1000.");
+            Console.WriteLine("Invalid number of lines per file. Using default of 50000.");
         }
         try
         {
             SplitFile(filePath, linesPerFile);
-            Console.WriteLine("File splitting completed successfully. Good bye");
+            Console.WriteLine("Splitting completed successfully.");
         }
         catch (Exception ex)
         {
@@ -60,9 +60,26 @@ class Program
 
                         string line = reader.ReadLine();
                         writer.WriteLine(line);
+
+                        UpdateProgressBar(i + 1, linesPerFile);
                     }
                 }
+                Console.WriteLine();
             }
         }
+    }
+    static void UpdateProgressBar(int currentLine, int totalLines)
+    {
+        int barWidth = 40;
+        
+        double progressFraction = (double)currentLine / totalLines;
+        
+        int progressBlocks = (int)(progressFraction * barWidth);
+
+        string progressBar = "[" + new string('=', progressBlocks) + new string(' ', barWidth - progressBlocks) + "]";
+
+        int percentage = (int)(progressFraction * 100);
+
+        Console.Write($"\r{progressBar} {percentage}%");
     }
 }
